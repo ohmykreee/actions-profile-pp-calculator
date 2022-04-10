@@ -178,7 +178,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{needs.handler.outputs.player_id}}-profile-${{env.RUN_DATE}}
-          path: ./${{github.event.inputs.player_id}}?-*.txt
+          path: ./*.txt
       
       - name: Close current issue
         uses: peter-evans/close-issue@v2

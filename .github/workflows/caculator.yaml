@@ -165,4 +165,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{github.event.inputs.player_id}}-profile-${{env.RUN_DATE}}
-          path: ./${{github.event.inputs.player_id}}?-*.txt
+          path: ./*.txt
