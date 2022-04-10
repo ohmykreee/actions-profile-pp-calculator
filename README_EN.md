@@ -31,6 +31,7 @@ Import these two `Secrets` by repeat the step above twice:
 | ----------- | ----------- |
 | CLIENT_ID   | `Client ID`  |
 | CLIENT_TOKEN| `Client Secret` |
+
 ![](screenshot/actions-04.jpg)
 
 ## 5. Trigger GitHub actions and get the result

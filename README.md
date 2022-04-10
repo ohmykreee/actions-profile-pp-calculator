@@ -31,6 +31,7 @@ Star（如果你想要支持以下我）并 Fork 该仓库。
 | ----------- | ----------- |
 | CLIENT_ID   | `客户端 ID`  |
 | CLIENT_TOKEN| `客户端密钥` |
+
 ![](screenshot/actions-04.jpg)
 
 ## 5. 运行 GitHub actions 并获取结果
