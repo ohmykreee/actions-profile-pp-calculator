@@ -30,10 +30,10 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '**Welcome**, @${{ github.actor }}
+              body: `**Welcome**, @${{ github.actor }}
 
                 Your request has been handled, you can get your result here: 
-                ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+                ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`
             })
 
   calculator:
