@@ -1,0 +1,173 @@
+name: Handle calculate request from issue
+on: 
+  issues:
+    types:
+      - opened
+
+jobs:
+  handler:
+    runs-on: ubuntu-latest
+    outputs:
+      handler: ${{ steps.request-handler.outputs.handler }}
+    steps:
+      - name: Test if need to calculate
+        if: contains( ${{ github.event.issue.title }}, '[Calculate Request]' )
+        id: request-handler
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setOutput("handler", ${{ github.event.issue.body }})
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `**Welcome**, @${{ github.actor }}
+
+                Your request has been handled, you can get your result here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`
+            })
+
+  calculator:
+    needs: handler
+    runs-on: ubuntu-latest
+    strategy:
+      handler: ${{fromJson(needs.handler.outputs.handler)}}
+    steps:
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.x'
+
+      - name: Fetch osu-tools
+        run: git clone --recurse-submodules https://github.com/ppy/osu-tools
+
+      - name: Pre-build
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --help
+
+      - name: Calculate std pp
+        if: ${{ handler.calculate_std == 'true' }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 --output ${{handler.player_id}}-std.txt ${{handler.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+
+      - name: Get std brief result
+        if: ${{ handler.calculate_std == 'true' }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs')
+            const readline = require('readline')
+
+            const rl = readline.createInterface({
+              input: fs.createReadStream('./${{handler.player_id}}-std.txt'),
+              crlfDelay: Infinity
+            })
+
+            let lineCounter = 0
+            const outputLine = ['Mode:     std']
+
+            rl.on('line', function (line) {
+              lineCounter++
+              outputLine.push(line)
+              if(lineCounter==3){rl.close()}
+            })
+
+            rl.on('close', function() {
+              core.info(outputLine.join('\n'))
+            })
+
+      - name: Calculate taiko pp
+        if: ${{ handler.calculate_taiko == 'true' }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 --output ${{handler.player_id}}-taiko.txt ${{handler.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+
+      - name: Get taiko brief result
+        if: ${{ handler.calculate_taiko == 'true' }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs')
+            const readline = require('readline')
+
+            const rl = readline.createInterface({
+              input: fs.createReadStream('./${{handler.player_id}}-taiko.txt'),
+              crlfDelay: Infinity
+            })
+
+            let lineCounter = 0
+            const outputLine = ['Mode:     taiko']
+
+            rl.on('line', function (line) {
+              lineCounter++
+              outputLine.push(line)
+              if(lineCounter==3){rl.close()}
+            })
+
+            rl.on('close', function() {
+              core.info(outputLine.join('\n'))
+            })
+
+      - name: Calculate catch pp
+        if: ${{ handler.calculate_catch == 'true' }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 --output ${{handler.player_id}}-catch.txt ${{handler.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+
+      - name: Get catch brief result
+        if: ${{ handler.calculate_catch == 'true' }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs')
+            const readline = require('readline')
+
+            const rl = readline.createInterface({
+              input: fs.createReadStream('./${{handler.player_id}}-catch.txt'),
+              crlfDelay: Infinity
+            })
+
+            let lineCounter = 0
+            const outputLine = ['Mode:     catch']
+
+            rl.on('line', function (line) {
+              lineCounter++
+              outputLine.push(line)
+              if(lineCounter==3){rl.close()}
+            })
+
+            rl.on('close', function() {
+              core.info(outputLine.join('\n'))
+            })
+
+      - name: Calculate mania pp
+        if: ${{ handler.calculate_mania == 'true' }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 --output ${{handler.player_id}}-mania.txt ${{handler.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+
+      - name: Get mania brief result
+        if: ${{ handler.calculate_mania == 'true' }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs')
+            const readline = require('readline')
+
+            const rl = readline.createInterface({
+              input: fs.createReadStream('./${{handler.player_id}}-mania.txt'),
+              crlfDelay: Infinity
+            })
+
+            let lineCounter = 0
+            const outputLine = ['Mode:     mania']
+
+            rl.on('line', function (line) {
+              lineCounter++
+              outputLine.push(line)
+              if(lineCounter==3){rl.close()}
+            })
+
+            rl.on('close', function() {
+              core.notice(outputLine.join('\n'))
+            })
+
+      - name: Get current date
+        run: echo "RUN_DATE=$(date --rfc-3339=date)" >> ${GITHUB_ENV}
+
+      - name: Upload detailed result
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{handler.player_id}}-profile-${{env.RUN_DATE}}
+          path: ./${{handler.player_id}}-*.txt
