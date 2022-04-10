@@ -8,7 +8,11 @@ jobs:
   handler:
     runs-on: ubuntu-latest
     outputs:
-      handler: ${{ steps.request-handler.outputs.handler }}
+      player_id: ${{ steps.request-handler.outputs.player_id }}
+      if_std: ${{ steps.request-handler.outputs.if_std }}
+      if_taiko: ${{ steps.request-handler.outputs.if_taiko }}
+      if_catch: ${{ steps.request-handler.outputs.if_catch }}
+      if_mania: ${{ steps.request-handler.outputs.if_mania }}
     steps:
       - name: Test if need to calculate
         if: contains( ${{ github.event.issue.title }}, '[Calculate Request]' )
@@ -16,7 +20,12 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            core.setOutput("handler", ${{ github.event.issue.body }})
+            const issue_input = JSON.parse('${{ github.event.issue.body }}')
+            core.setOutput("player_id", issue_input.player_id )
+            core.setOutput("if_std", issue_input.calculate_std )
+            core.setOutput("if_taiko", issue_input.calculate_taiko )
+            core.setOutput("if_catch", issue_input.calculate_catch )
+            core.setOutput("if_mania", issue_input.calculate_mania )
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -29,8 +38,6 @@ jobs:
   calculator:
     needs: handler
     runs-on: ubuntu-latest
-    strategy:
-      handler: ${{fromJson(needs.handler.outputs.handler)}}
     steps:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v2
@@ -44,11 +51,11 @@ jobs:
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --help
 
       - name: Calculate std pp
-        if: ${{ handler.calculate_std == 'true' }}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 --output ${{handler.player_id}}-std.txt ${{handler.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+        if: ${{ needs.handler.outputs.if_std == 'true' }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 --output ${{needs.handler.outputs.player_id}}-std.txt ${{needs.handler.outputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
 
       - name: Get std brief result
-        if: ${{ handler.calculate_std == 'true' }}
+        if: ${{ needs.handler.outputs.if_std == 'true' }}
         uses: actions/github-script@v6
         with:
           script: |
@@ -56,7 +63,7 @@ jobs:
             const readline = require('readline')
 
             const rl = readline.createInterface({
-              input: fs.createReadStream('./${{handler.player_id}}-std.txt'),
+              input: fs.createReadStream('./${{needs.handler.outputs.player_id}}-std.txt'),
               crlfDelay: Infinity
             })
 
@@ -74,11 +81,11 @@ jobs:
             })
 
       - name: Calculate taiko pp
-        if: ${{ handler.calculate_taiko == 'true' }}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 --output ${{handler.player_id}}-taiko.txt ${{handler.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+        if: ${{ needs.handler.outputs.if_taiko == 'true' }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 --output ${{needs.handler.outputs.player_id}}-taiko.txt ${{needs.handler.outputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
 
       - name: Get taiko brief result
-        if: ${{ handler.calculate_taiko == 'true' }}
+        if: ${{ needs.handler.outputs.if_taiko == 'true' }}
         uses: actions/github-script@v6
         with:
           script: |
@@ -86,7 +93,7 @@ jobs:
             const readline = require('readline')
 
             const rl = readline.createInterface({
-              input: fs.createReadStream('./${{handler.player_id}}-taiko.txt'),
+              input: fs.createReadStream('./${{needs.handler.outputs.player_id}}-taiko.txt'),
               crlfDelay: Infinity
             })
 
@@ -104,11 +111,11 @@ jobs:
             })
 
       - name: Calculate catch pp
-        if: ${{ handler.calculate_catch == 'true' }}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 --output ${{handler.player_id}}-catch.txt ${{handler.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+        if: ${{ needs.handler.outputs.if_catch == 'true' }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 --output ${{needs.handler.outputs.player_id}}-catch.txt ${{needs.handler.outputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
 
       - name: Get catch brief result
-        if: ${{ handler.calculate_catch == 'true' }}
+        if: ${{ needs.handler.outputs.if_catch == 'true' }}
         uses: actions/github-script@v6
         with:
           script: |
@@ -116,7 +123,7 @@ jobs:
             const readline = require('readline')
 
             const rl = readline.createInterface({
-              input: fs.createReadStream('./${{handler.player_id}}-catch.txt'),
+              input: fs.createReadStream('./${{needs.handler.outputs.player_id}}-catch.txt'),
               crlfDelay: Infinity
             })
 
@@ -134,11 +141,11 @@ jobs:
             })
 
       - name: Calculate mania pp
-        if: ${{ handler.calculate_mania == 'true' }}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 --output ${{handler.player_id}}-mania.txt ${{handler.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+        if: ${{ needs.handler.outputs.if_mania == 'true' }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 --output ${{needs.handler.outputs.player_id}}-mania.txt ${{needs.handler.outputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
 
       - name: Get mania brief result
-        if: ${{ handler.calculate_mania == 'true' }}
+        if: ${{ needs.handler.outputs.if_mania == 'true' }}
         uses: actions/github-script@v6
         with:
           script: |
@@ -146,7 +153,7 @@ jobs:
             const readline = require('readline')
 
             const rl = readline.createInterface({
-              input: fs.createReadStream('./${{handler.player_id}}-mania.txt'),
+              input: fs.createReadStream('./${{needs.handler.outputs.player_id}}-mania.txt'),
               crlfDelay: Infinity
             })
 
@@ -169,5 +176,5 @@ jobs:
       - name: Upload detailed result
         uses: actions/upload-artifact@v3
         with:
-          name: ${{handler.player_id}}-profile-${{env.RUN_DATE}}
-          path: ./${{handler.player_id}}-*.txt
+          name: ${{needs.handler.outputs.player_id}}-profile-${{env.RUN_DATE}}
+          path: ./${{needs.handler.outputs.player_id}}-*.txt
