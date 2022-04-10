@@ -20,7 +20,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const issue_input = JSON.parse('${{ github.event.issue.body }}')
+            const issue_input = JSON.parse(`${{ github.event.issue.body }}`)
             core.setOutput("player_id", issue_input.player_id )
             core.setOutput("if_std", issue_input.calculate_std )
             core.setOutput("if_taiko", issue_input.calculate_taiko )
@@ -178,3 +178,6 @@ jobs:
         with:
           name: ${{needs.handler.outputs.player_id}}-profile-${{env.RUN_DATE}}
           path: ./${{needs.handler.outputs.player_id}}-*.txt
+      
+      - name: Close current issue
+        uses: peter-evans/close-issue@v2
