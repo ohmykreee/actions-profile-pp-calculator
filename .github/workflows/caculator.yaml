@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup dotnet
-        use: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '6.x'
 
