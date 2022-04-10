@@ -65,7 +65,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join(' | '))
+              core.notice(outputLine.join(' | '))
             })
 
       - name: Calculate taiko pp
@@ -95,7 +95,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join(' | '))
+              core.notice(outputLine.join(' | '))
             })
 
       - name: Calculate catch pp
@@ -125,7 +125,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join(' | '))
+              core.notice(outputLine.join(' | '))
             })
 
       - name: Calculate mania pp
@@ -165,4 +165,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{github.event.inputs.player_id}}-profile-${{env.RUN_DATE}}
-          path: ./${{github.event.inputs.player_id}}-*.txt
+          path: ./${{github.event.inputs.player_id}}?-*.txt

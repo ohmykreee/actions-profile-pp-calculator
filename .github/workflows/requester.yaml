@@ -78,7 +78,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join(' | '))
+              core.notice(outputLine.join(' | '))
             })
 
       - name: Calculate taiko pp
@@ -108,7 +108,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join(' | '))
+              core.notice(outputLine.join(' | '))
             })
 
       - name: Calculate catch pp
@@ -138,7 +138,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join(' | ))
+              core.notice(outputLine.join(' | ))
             })
 
       - name: Calculate mania pp
@@ -178,7 +178,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{needs.handler.outputs.player_id}}-profile-${{env.RUN_DATE}}
-          path: ./${{needs.handler.outputs.player_id}}-*.txt
+          path: ./${{github.event.inputs.player_id}}?-*.txt
       
       - name: Close current issue
         uses: peter-evans/close-issue@v2
