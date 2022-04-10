@@ -155,7 +155,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join('\n'))
+              core.notice(outputLine.join('\n'))
             })
 
       - name: Get current date
