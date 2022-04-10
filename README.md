@@ -8,7 +8,7 @@ ZH | [EN](README_EN.md)
 - 一个 GitHub 账号
 
 ## 1. Fork 该仓库
-Star（如果你想要支持以下我）并 Fork 该仓库。
+Star（如果你想要支持一下我）并 Fork 该仓库。
 ![](screenshot/actions-01.jpg)
 **注意**：请将仓库设为 Public （公开），不支持私有仓库。
 
