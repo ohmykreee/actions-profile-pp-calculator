@@ -42,10 +42,14 @@ Refresh current page and enter the workflow you just created. Wait for the workf
 
 # FAQ
 1. Help! I encounter some problems.   
-Please open a issue [HERE](https://github.com/ohmykreee/actions-profile-pp-calculator/issues).
+Please open a issue [HERE](https://github.com/ohmykreee/actions-profile-pp-calculator/issues) with template `Bug report`.
 - Please use English or Chinese to describe your problem
 - Please describe your problem in detail and attach the log file
 - Issues not related to this project or issues with missing details and no further response will be closed
 
-2. I want to update this repository   
+2. Is there any easier solution?   
+Please open a issue [HERE](https://github.com/ohmykreee/actions-profile-pp-calculator/issues) with template `Request a calculate`.   
+**Warning**: Please DO NOT change the title or the structure of the content, just modify the content you need. Or something unexpected will happen.
+
+3. I want to update this repository   
 `Code` --> `Fetch upstream` --> `Fetch and merge`

@@ -42,10 +42,14 @@ Star（如果你想要支持以下我）并 Fork 该仓库。
 
 # FAQ
 1. 救命！我遇到问题了   
-请在 [该处](https://github.com/ohmykreee/actions-profile-pp-calculator/issues) 选择 `New issue`：
+请在 [该处](https://github.com/ohmykreee/actions-profile-pp-calculator/issues) 选择 `New issue`，并选择模板 `Bug report`：
 - 请使用中文或者英文描述你的问题
 - 请详细描述错误发生的经过，并提供运行日志
 - 无关的问题或问题描述不详细并长期未回复的将进行关闭处理
 
-2. 我想更新这个仓库   
+2. 我就是懒，我想要更简单的方法！   
+请在 [该处](https://github.com/ohmykreee/actions-profile-pp-calculator/issues) 选择 `New issue`，并选择模板 `Request a calculate`。   
+**注意**：请不要更改标题或正文结构，仅修改所需要的内容。否则可能会产生不可预料的后果。
+
+3. 我想更新这个仓库   
 `Code` --> `Fetch upstream` --> `Fetch and merge`

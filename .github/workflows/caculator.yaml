@@ -65,7 +65,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join('\n'))
+              core.info(outputLine.join(' | '))
             })
 
       - name: Calculate taiko pp
@@ -95,7 +95,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join('\n'))
+              core.info(outputLine.join(' | '))
             })
 
       - name: Calculate catch pp
@@ -125,7 +125,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join('\n'))
+              core.info(outputLine.join(' | '))
             })
 
       - name: Calculate mania pp
@@ -155,7 +155,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.notice(outputLine.join('\n'))
+              core.notice(outputLine.join(' | '))
             })
 
       - name: Get current date

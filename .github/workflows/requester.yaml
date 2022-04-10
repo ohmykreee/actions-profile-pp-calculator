@@ -30,9 +30,10 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `**Welcome**, @${{ github.actor }}
+              body: '**Welcome**, @${{ github.actor }}
 
-                Your request has been handled, you can get your result here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`
+                Your request has been handled, you can get your result here: 
+                ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
             })
 
   calculator:
@@ -77,7 +78,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join('\n'))
+              core.info(outputLine.join(' | '))
             })
 
       - name: Calculate taiko pp
@@ -107,7 +108,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join('\n'))
+              core.info(outputLine.join(' | '))
             })
 
       - name: Calculate catch pp
@@ -137,7 +138,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.info(outputLine.join('\n'))
+              core.info(outputLine.join(' | ))
             })
 
       - name: Calculate mania pp
@@ -167,7 +168,7 @@ jobs:
             })
 
             rl.on('close', function() {
-              core.notice(outputLine.join('\n'))
+              core.notice(outputLine.join(' | '))
             })
 
       - name: Get current date
@@ -181,3 +182,8 @@ jobs:
       
       - name: Close current issue
         uses: peter-evans/close-issue@v2
+        with:
+          comment: |
+            Workflow run has done!
+            See result here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Auto-closing this issue.
