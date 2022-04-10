@@ -39,19 +39,19 @@ jobs:
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --help
 
       - name: Calculate std pp
-        if: ${{ github.event.inputs.if_std }}
+        if: ${{ github.event.inputs.if_std == 'true' }}
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 --output ${{github.event.inputs.player_id}}-std.txt ${{github.event.inputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
 
       - name: Calculate taiko pp
-        if: ${{ github.event.inputs.if_taiko }}
+        if: ${{ github.event.inputs.if_taiko == 'true' }}
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 --output ${{github.event.inputs.player_id}}-taiko.txt ${{github.event.inputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
 
       - name: Calculate catch pp
-        if: ${{ github.event.inputs.if_catch }}
+        if: ${{ github.event.inputs.if_catch == 'true' }}
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 --output ${{github.event.inputs.player_id}}-catch.txt ${{github.event.inputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
 
       - name: Calculate mania pp
-        if: ${{ github.event.inputs.if_mania }}
+        if: ${{ github.event.inputs.if_mania == 'true' }}
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 --output ${{github.event.inputs.player_id}}-mania.txt ${{github.event.inputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
 
       - name: Get current date
