@@ -42,7 +42,7 @@ Star（如果你想要支持以下我）并 Fork 该仓库。
 
 # FAQ
 1. 救命！我遇到问题了   
-请在该仓库的 `Issues` 内选择 `New issue`：
+请在 [该处](https://github.com/ohmykreee/actions-profile-pp-calculator/issues) 选择 `New issue`：
 - 请使用中文或者英文描述你的问题
 - 请详细描述错误发生的经过，并提供运行日志
 - 无关的问题或问题描述不详细并长期未回复的将进行关闭处理

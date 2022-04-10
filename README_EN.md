@@ -42,7 +42,7 @@ Refresh current page and enter the workflow you just created. Wait for the workf
 
 # FAQ
 1. Help! I encounter some problems.   
-Please open a issue in the `Issues` page.
+Please open a issue [HERE](https://github.com/ohmykreee/actions-profile-pp-calculator/issues).
 - Please use English or Chinese to describe your problem
 - Please describe your problem in detail and attach the log file
 - Issues not related to this project or issues with missing details and no further response will be closed
