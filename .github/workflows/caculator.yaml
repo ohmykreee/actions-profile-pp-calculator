@@ -1,0 +1,78 @@
+name: Profile pp Calculator
+on:
+  workflow_dispatch:
+    inputs:
+      player_id:
+        description: "User ID or username to calculate"
+        required: true
+        type: string
+      if_std:
+        description: "Calculate std pp"
+        required: true
+        type: boolean
+      if_taiko:
+        description: "Calculate taiko pp"
+        required: true
+        type: boolean
+      if_catch:
+        description: "Calculate catch pp"
+        required: true
+        type: boolean
+      if_mania:
+        description: "Calculate mania pp"
+        required: true
+        type: boolean
+
+jobs:
+  calculator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch osu-tools
+        run: git clone --recurse-submodules https://github.com/ppy/osu-tools
+
+      - name: Pre-build
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --help
+
+      - name: Calculate std pp
+        if: ${{ github.event.inputs.if_std == true }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 --output ${{github.event.inputs.player_id}}-std.txt ${{github.event.inputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+
+      - name: Upload std pp result
+        if: ${{ github.event.inputs.if_std == true }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{github.event.inputs.player_id}}-std-profile
+          path: ./${{github.event.inputs.player_id}}-std.txt
+
+      - name: Calculate taiko pp
+        if: ${{ github.event.inputs.if_taiko == true }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 --output ${{github.event.inputs.player_id}}-taiko.txt ${{github.event.inputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+
+      - name: Upload taiko pp result
+        if: ${{ github.event.inputs.if_taiko == true }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{github.event.inputs.player_id}}-taiko-profile
+          path: ./${{github.event.inputs.player_id}}-taiko.txt
+
+      - name: Calculate catch pp
+        if: ${{ github.event.inputs.if_catch == true }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 --output ${{github.event.inputs.player_id}}-catch.txt ${{github.event.inputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+
+      - name: Upload catch pp result
+        if: ${{ github.event.inputs.if_catch == true }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{github.event.inputs.player_id}}-catch-profile
+          path: ./${{github.event.inputs.player_id}}-catch.txt
+
+      - name: Calculate mania pp
+        if: ${{ github.event.inputs.if_mania == true }}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 --output ${{github.event.inputs.player_id}}-mania.txt ${{github.event.inputs.player_id}} ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+
+      - name: Upload mania pp result
+        if: ${{ github.event.inputs.if_mania == true }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{github.event.inputs.player_id}}-mania-profile
+          path: ./${{github.event.inputs.player_id}}-mania.txt
