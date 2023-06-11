@@ -46,7 +46,7 @@ jobs:
           script: |
             const playerId = "${{needs.handler.outputs.player_id}}"
             if (!playerId.match(/^[A-Za-z0-9 \[\]_-]+$/)) {
-              core.setFailed(`${${{needs.handler.outputs.player_id}}} is an invalid player id!`)
+              core.setFailed(`${{needs.handler.outputs.player_id}} is an invalid player id!`)
             }
 
       - name: Setup dotnet

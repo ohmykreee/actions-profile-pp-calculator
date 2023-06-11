@@ -33,7 +33,7 @@ jobs:
           script: |
             const playerId = "${{github.event.inputs.player_id}}"
             if (!playerId.match(/^[A-Za-z0-9 \[\]_-]+$/)) {
-              core.setFailed(`${${{github.event.inputs.player_id}}} is an invalid player id!`)
+              core.setFailed(`${{github.event.inputs.player_id}} is an invalid player id!`)
             }
 
       - name: Setup dotnet
