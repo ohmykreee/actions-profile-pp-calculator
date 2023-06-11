@@ -191,9 +191,20 @@ jobs:
           path: ./*.txt
       
       - name: Close current issue
+        if: success()
         uses: peter-evans/close-issue@v2
         with:
           comment: |
             Workflow run has done!
             See result here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Auto-closing this issue.
+
+      - name: Close current issue
+        if: failure()
+        uses: peter-evans/close-issue@v2
+        with:
+          comment: |
+            Workflow run encounters failure!
+            See result here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Please report this if you need to seek help.
             Auto-closing this issue.
