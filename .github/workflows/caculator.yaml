@@ -31,7 +31,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const playerId = ${{github.event.inputs.player_id}}
+            const playerId = "${{github.event.inputs.player_id}}"
             if (!playerId.match(/^[A-Za-z0-9 \[\]_-]+$/)) {
               core.setFailed(`${${{github.event.inputs.player_id}}} is an invalid player id!`)
             }
@@ -171,6 +171,7 @@ jobs:
         run: echo "RUN_DATE=$(date --rfc-3339=date)" >> ${GITHUB_ENV}
 
       - name: Upload detailed result
+        if: success()
         uses: actions/upload-artifact@v3
         with:
           name: ${{github.event.inputs.player_id}}-profile-${{env.RUN_DATE}}
