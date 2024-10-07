@@ -39,7 +39,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '6.x'
+          dotnet-version: '8.x'
 
       - name: Fetch osu-tools
         run: git clone --recurse-submodules https://github.com/ppy/osu-tools
