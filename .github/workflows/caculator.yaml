@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check if player id is valid
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const playerId = "${{github.event.inputs.player_id}}"
@@ -37,7 +37,7 @@ jobs:
             }
 
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@4
         with:
           dotnet-version: '8.x'
 
@@ -49,11 +49,11 @@ jobs:
 
       - name: Calculate std pp
         if: ${{ github.event.inputs.if_std == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 --output "${{github.event.inputs.player_id}}-std.txt" "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} > "${{github.event.inputs.player_id}}-std.txt"
 
       - name: Get std brief result
         if: ${{ github.event.inputs.if_std == 'true' && success()}}
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs')
@@ -66,11 +66,18 @@ jobs:
 
             let lineCounter = 0
             const outputLine = ['Mode:     std']
+            let relevantSection = false
 
             rl.on('line', function (line) {
-              lineCounter++
-              outputLine.push(line)
-              if(lineCounter==3){rl.close()}
+              if (line.startsWith('User:')) {
+                relevantSection = true
+              }
+
+              if (relevantSection) {
+                lineCounter++
+                outputLine.push(line)
+                if (lineCounter === 3) { rl.close() }
+              }
             })
 
             rl.on('close', function() {
@@ -79,11 +86,11 @@ jobs:
 
       - name: Calculate taiko pp
         if: ${{ github.event.inputs.if_taiko == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 --output "${{github.event.inputs.player_id}}-taiko.txt" "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} > "${{github.event.inputs.player_id}}-taiko.txt"
 
       - name: Get taiko brief result
         if: ${{ github.event.inputs.if_taiko == 'true' && success()}}
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs')
@@ -96,11 +103,18 @@ jobs:
 
             let lineCounter = 0
             const outputLine = ['Mode:     taiko']
+            let relevantSection = false
 
             rl.on('line', function (line) {
-              lineCounter++
-              outputLine.push(line)
-              if(lineCounter==3){rl.close()}
+              if (line.startsWith('User:')) {
+                relevantSection = true
+              }
+
+              if (relevantSection) {
+                lineCounter++
+                outputLine.push(line)
+                if (lineCounter === 3) { rl.close() }
+              }
             })
 
             rl.on('close', function() {
@@ -109,11 +123,11 @@ jobs:
 
       - name: Calculate catch pp
         if: ${{ github.event.inputs.if_catch == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 --output "${{github.event.inputs.player_id}}-catch.txt" "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} > "${{github.event.inputs.player_id}}-catch.txt"
 
       - name: Get catch brief result
         if: ${{ github.event.inputs.if_catch == 'true' && success()}}
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs')
@@ -126,11 +140,18 @@ jobs:
 
             let lineCounter = 0
             const outputLine = ['Mode:     catch']
+            let relevantSection = false
 
             rl.on('line', function (line) {
-              lineCounter++
-              outputLine.push(line)
-              if(lineCounter==3){rl.close()}
+              if (line.startsWith('User:')) {
+                relevantSection = true
+              }
+
+              if (relevantSection) {
+                lineCounter++
+                outputLine.push(line)
+                if (lineCounter === 3) { rl.close() }
+              }
             })
 
             rl.on('close', function() {
@@ -139,7 +160,7 @@ jobs:
 
       - name: Calculate mania pp
         if: ${{ github.event.inputs.if_mania == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 --output "${{github.event.inputs.player_id}}-mania.txt" "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}}
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} > "${{github.event.inputs.player_id}}-mania.txt"
 
       - name: Get mania brief result
         if: ${{ github.event.inputs.if_mania == 'true' && success()}}
@@ -156,11 +177,18 @@ jobs:
 
             let lineCounter = 0
             const outputLine = ['Mode:     mania']
+            let relevantSection = false
 
             rl.on('line', function (line) {
-              lineCounter++
-              outputLine.push(line)
-              if(lineCounter==3){rl.close()}
+              if (line.startsWith('User:')) {
+                relevantSection = true
+              }
+
+              if (relevantSection) {
+                lineCounter++
+                outputLine.push(line)
+                if (lineCounter === 3) { rl.close() }
+              }
             })
 
             rl.on('close', function() {
