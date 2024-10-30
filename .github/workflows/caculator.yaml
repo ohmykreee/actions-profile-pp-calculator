@@ -37,7 +37,7 @@ jobs:
             }
 
       - name: Setup dotnet
-        uses: actions/setup-dotnet@4
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
@@ -164,7 +164,7 @@ jobs:
 
       - name: Get mania brief result
         if: ${{ github.event.inputs.if_mania == 'true' && success()}}
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs')
