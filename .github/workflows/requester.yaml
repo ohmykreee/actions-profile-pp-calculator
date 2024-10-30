@@ -61,11 +61,11 @@ jobs:
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --help
 
       - name: Calculate std pp
-        if: ${{ github.event.inputs.if_std == 'true' && success()}}
+        if: ${{ needs.handler.outputs.if_std == 'true' && success()}}
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{github.event.inputs.player_id}}-std.txt"
 
       - name: Clean and get std brief result
-        if: ${{ github.event.inputs.if_std == 'true' && success()}}
+        if: ${{ needs.handler.outputs.if_std == 'true' && success()}}
         uses: actions/github-script@v7
         with:
           script: |
@@ -82,11 +82,11 @@ jobs:
             core.notice(outputLine.join(' | '))
 
       - name: Calculate taiko pp
-        if: ${{ github.event.inputs.if_taiko == 'true' && success()}}
+        if: ${{ needs.handler.outputs.if_taiko == 'true' && success()}}
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{github.event.inputs.player_id}}-taiko.txt"
 
       - name: Clean and get taiko brief result
-        if: ${{ github.event.inputs.if_taiko == 'true' && success()}}
+        if: ${{ needs.handler.outputs.if_taiko == 'true' && success()}}
         uses: actions/github-script@v7
         with:
           script: |
@@ -103,11 +103,11 @@ jobs:
             core.notice(outputLine.join(' | '))
 
       - name: Calculate catch pp
-        if: ${{ github.event.inputs.if_catch == 'true' && success()}}
+        if: ${{ needs.handler.outputs.if_catch == 'true' && success()}}
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{github.event.inputs.player_id}}-catch.txt"
 
       - name: Clean and get catch brief result
-        if: ${{ github.event.inputs.if_catch == 'true' && success()}}
+        if: ${{ needs.handler.outputs.if_catch == 'true' && success()}}
         uses: actions/github-script@v7
         with:
           script: |
@@ -124,11 +124,11 @@ jobs:
             core.notice(outputLine.join(' | '))
 
       - name: Calculate mania pp
-        if: ${{ github.event.inputs.if_mania == 'true' && success()}}
+        if: ${{ needs.handler.outputs.if_mania == 'true' && success()}}
         run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{github.event.inputs.player_id}}-mania.txt"
 
       - name: Clean and get mania brief result
-        if: ${{ github.event.inputs.if_mania == 'true' && success()}}
+        if: ${{ needs.handler.outputs.if_mania == 'true' && success()}}
         uses: actions/github-script@v7
         with:
           script: |
