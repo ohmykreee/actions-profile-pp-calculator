@@ -62,7 +62,7 @@ jobs:
 
       - name: Calculate std pp
         if: ${{ needs.handler.outputs.if_std == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{github.event.inputs.player_id}}-std.txt"
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 "${{needs.handler.outputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{needs.handler.outputs.player_id}}-std.txt"
 
       - name: Clean and get std brief result
         if: ${{ needs.handler.outputs.if_std == 'true' && success()}}
@@ -70,7 +70,7 @@ jobs:
         with:
           script: |
             const fs = require('fs')
-            const path = './${{github.event.inputs.player_id}}-std.txt'
+            const path = './${{needs.handler.outputs.player_id}}-std.txt'
             const lines = fs.readFileSync(path, 'utf-8').split('\n')
             const userIndex = lines.findIndex(line => line.startsWith('User:'))
             if (userIndex === -1) {
@@ -83,7 +83,7 @@ jobs:
 
       - name: Calculate taiko pp
         if: ${{ needs.handler.outputs.if_taiko == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{github.event.inputs.player_id}}-taiko.txt"
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 "${{needs.handler.outputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{needs.handler.outputs.player_id}}-taiko.txt"
 
       - name: Clean and get taiko brief result
         if: ${{ needs.handler.outputs.if_taiko == 'true' && success()}}
@@ -91,7 +91,7 @@ jobs:
         with:
           script: |
             const fs = require('fs')
-            const path = './${{github.event.inputs.player_id}}-taiko.txt'
+            const path = './${{needs.handler.outputs.player_id}}-taiko.txt'
             const lines = fs.readFileSync(path, 'utf-8').split('\n')
             const userIndex = lines.findIndex(line => line.startsWith('User:'))
             if (userIndex === -1) {
@@ -104,7 +104,7 @@ jobs:
 
       - name: Calculate catch pp
         if: ${{ needs.handler.outputs.if_catch == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{github.event.inputs.player_id}}-catch.txt"
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 "${{needs.handler.outputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{needs.handler.outputs.player_id}}-catch.txt"
 
       - name: Clean and get catch brief result
         if: ${{ needs.handler.outputs.if_catch == 'true' && success()}}
@@ -112,7 +112,7 @@ jobs:
         with:
           script: |
             const fs = require('fs')
-            const path = './${{github.event.inputs.player_id}}-catch.txt'
+            const path = './${{needs.handler.outputs.player_id}}-catch.txt'
             const lines = fs.readFileSync(path, 'utf-8').split('\n')
             const userIndex = lines.findIndex(line => line.startsWith('User:'))
             if (userIndex === -1) {
@@ -125,7 +125,7 @@ jobs:
 
       - name: Calculate mania pp
         if: ${{ needs.handler.outputs.if_mania == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{github.event.inputs.player_id}}-mania.txt"
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 "${{needs.handler.outputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "${{needs.handler.outputs.player_id}}-mania.txt"
 
       - name: Clean and get mania brief result
         if: ${{ needs.handler.outputs.if_mania == 'true' && success()}}
@@ -133,7 +133,7 @@ jobs:
         with:
           script: |
             const fs = require('fs')
-            const path = './${{github.event.inputs.player_id}}-mania.txt'
+            const path = './${{needs.handler.outputs.player_id}}-mania.txt'
             const lines = fs.readFileSync(path, 'utf-8').split('\n')
             const userIndex = lines.findIndex(line => line.startsWith('User:'))
             if (userIndex === -1) {
