@@ -31,10 +31,75 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            const playerId = "${{github.event.inputs.player_id}}"
-            if (!playerId.match(/^(?!-)[A-Za-z0-9 \[\]_-]+$/)) {
-              core.setFailed(`Malformed username ${{github.event.inputs.player_id}}, Please use ID instead!`)
+            const https = require('https')
+
+            async function main() {
+              const playerId = "${{github.event.inputs.player_id}}"
+              let extractedId = ''
+
+              if (/^\d+$/.test(playerId)) {
+                extractedId = playerId
+              }
+                else if (/^[A-Za-z0-9 \[\]_-]+$/.test(playerId)) {
+                  const url = `https://osu.ppy.sh/users/${encodeURIComponent(playerId)}`
+
+                  try {
+                    const finalUrl = await followRedirect(url)
+                    const match = finalUrl.match(/\/users\/(\d+)/)
+                    if (match) {
+                      extractedId = match[1]
+                    } else {
+                      throw new Error(`Can't resolve player id from url: ${finalUrl}`)
+                    }
+                  } catch (e) {
+                    core.setFailed(e.message)
+                    return
+                  }
+                }
+
+              else {
+                core.setFailed(
+                  `Malformed username ${playerId}, Please use ID instead!`
+                )
+                return
+              }
+
+              core.exportVariable('OSU_ID', extractedId)
             }
+
+
+            function followRedirect(url) {
+              return new Promise((resolve, reject) => {
+                const req = https.get(url, (res) => {
+                  const { statusCode, headers } = res
+                  res.destroy()
+
+                  if (statusCode >= 300 && statusCode < 400 && headers.location) {
+                    let location = headers.location
+                    if (location.startsWith('/')) {
+                      location = `https://osu.ppy.sh${location}`
+                    }
+                    resolve(location)
+                  }
+
+                  else if (statusCode >= 200 && statusCode < 300) {
+                    resolve(url)
+                  }
+
+                  else {
+                    reject(new Error(`HTTP ${statusCode}`))
+                  }
+                })
+
+                req.on('error', (err) => reject(err))
+                req.setTimeout(15000, () => {
+                  req.destroy()
+                  reject(new Error('请求超时'))
+                })
+              })
+            }
+
+            main()
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v5
@@ -49,7 +114,7 @@ jobs:
 
       - name: Calculate std pp
         if: ${{ github.event.inputs.if_std == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "./${{github.event.inputs.player_id}}-std.txt"
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 0 "${{env.OSU_ID}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "./${{github.event.inputs.player_id}}-std.txt"
 
       - name: Clean and get std brief result
         if: ${{ github.event.inputs.if_std == 'true' && success()}}
@@ -70,7 +135,7 @@ jobs:
 
       - name: Calculate taiko pp
         if: ${{ github.event.inputs.if_taiko == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "./${{github.event.inputs.player_id}}-taiko.txt"
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 1 "${{env.OSU_ID}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "./${{github.event.inputs.player_id}}-taiko.txt"
 
       - name: Clean and get taiko brief result
         if: ${{ github.event.inputs.if_taiko == 'true' && success()}}
@@ -91,7 +156,7 @@ jobs:
 
       - name: Calculate catch pp
         if: ${{ github.event.inputs.if_catch == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "./${{github.event.inputs.player_id}}-catch.txt"
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 2 "${{env.OSU_ID}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "./${{github.event.inputs.player_id}}-catch.txt"
 
       - name: Clean and get catch brief result
         if: ${{ github.event.inputs.if_catch == 'true' && success()}}
@@ -112,7 +177,7 @@ jobs:
 
       - name: Calculate mania pp
         if: ${{ github.event.inputs.if_mania == 'true' && success()}}
-        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 "${{github.event.inputs.player_id}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "./${{github.event.inputs.player_id}}-mania.txt"
+        run: dotnet run --project "./osu-tools/PerformanceCalculator" -- profile --ruleset 3 "${{env.OSU_ID}}" ${{secrets.CLIENT_ID}} ${{secrets.CLIENT_TOKEN}} | tee "./${{github.event.inputs.player_id}}-mania.txt"
 
       - name: Clean and get mania brief result
         if: ${{ github.event.inputs.if_mania == 'true' && success()}}
