@@ -94,7 +94,7 @@ jobs:
                 req.on('error', (err) => reject(err))
                 req.setTimeout(15000, () => {
                   req.destroy()
-                  reject(new Error('请求超时'))
+                  reject(new Error('Request timed out'))
                 })
               })
             }
